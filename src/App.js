@@ -1,5 +1,5 @@
+import ExpenseItem from "./components/ExpenseItem";
 function App() {
- 
   return (
             //in case of vanilla js we have to do ,
            // const para=document.createElement('p')
@@ -8,7 +8,7 @@ function App() {
     // root.append('para')
     <div>
       <h2>Let's get started!</h2>
-      <p>This is also visible.</p>
+      <ExpenseItem></ExpenseItem>
     </div>
   );
 }
