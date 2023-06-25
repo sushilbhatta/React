@@ -1,5 +1,5 @@
-import Expenses from "./components/Expenses";
-export default function App() {
+import Expenses from "./components/Expenses/Expenses";
+const App=()=> {
    const expenses = [
     {
       id: "e1",
@@ -28,7 +28,7 @@ export default function App() {
     </div>
   );
 }
-
+export default  App
 
 //in case of vanilla js we have to do ,
 // const para=document.createElement('p')
