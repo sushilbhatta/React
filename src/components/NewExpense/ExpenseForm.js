@@ -4,7 +4,7 @@ const ExpenseForm = () => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
-  
+
   const titleChangeHandler = (event) => {
     setEnteredTitle(event.target.value);
   };
@@ -16,16 +16,28 @@ const ExpenseForm = () => {
   const dateChangeHandler = (event) => {
     setEnteredDate(event.target.value);
   };
-  // const [btn,setbtn]=useState()
-  // const btnClickHandler=(event)=>{
-  //     setbtn()
-  // }
+  const submitHandler = (event) => {
+    event.preventDefault();
+    const expenseData = {
+      title: enteredTitle,
+      amount: enteredAmount,
+      date: new Date(enteredDate),
+    };
+    setEnteredTitle("hi");
+    setEnteredAmount('');
+    setEnteredDate("");
+    console.log(expenseData);
+  };
   return (
-    <form action="">
+    <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
         <div className="new-expense__control">
           <label>Title</label>
-          <input type="text" onChange={titleChangeHandler} />
+          <input
+            type="text"
+            value={enteredTitle} //the value attribute must be used to do two way binfing.ie clearing form after submit.
+            onChange={titleChangeHandler}
+          />
         </div>
         <div className="new-expense__control">
           <label>Amount</label>
@@ -33,6 +45,7 @@ const ExpenseForm = () => {
             type="number"
             min="0.01"
             step="0.01"
+            value={enteredAmount}
             onChange={amountChangeHandler}
           />
         </div>
@@ -42,6 +55,7 @@ const ExpenseForm = () => {
             type="date"
             min="2023-01-01"
             max="2026-12-30"
+            value={enteredDate}
             onChange={dateChangeHandler}
           />
         </div>
