@@ -5,10 +5,12 @@ import Card from "../UI/Card";
 import "../UI/Card.css";
 
 const ExpenseItem = (props) => {
-  const [title,setTitle]=useState(props.title)
+  const [title, setTitle] = useState(props.title);
+
   const eventHandler = () => {
-    setTitle('updated')
+    setTitle("updated");
   };
+
   return (
     <Card className="expense-item">
       <ExpenseDate date={props.date} />
