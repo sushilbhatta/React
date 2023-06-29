@@ -1,7 +1,7 @@
 import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
-const App=()=> {
-   const expenses = [
+const App = () => {
+  const expenses = [
     {
       id: "e1",
       title: "Toilet Paper",
@@ -22,14 +22,19 @@ const App=()=> {
       date: new Date(2021, 5, 12),
     },
   ];
+  //handling props child to parent
+  const expenseDatahandler = (expense) => {
+    console.log('In app.js');
+    console.log(expense)
+  };
   return (
     <div>
-      <NewExpense/>
-      <Expenses items={expenses} ></Expenses>
+      <NewExpense onExpenseData={expenseDatahandler} />
+      <Expenses items={expenses}></Expenses>
     </div>
   );
-}
-export default  App
+};
+export default App;
 
 //in case of vanilla js we have to do ,
 // const para=document.createElement('p')

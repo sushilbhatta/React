@@ -1,21 +1,23 @@
 import { useState } from "react";
 import "./ExpenseForm.css";
-const ExpenseForm = () => {
+const ExpenseForm = (props) => {
+  // handling multiple states
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
 
+  //Eventhandelrs for diffet input field( Tracks the changes in the file.)
   const titleChangeHandler = (event) => {
     setEnteredTitle(event.target.value);
   };
-
   const amountChangeHandler = (event) => {
     setEnteredAmount(event.target.value);
   };
-
   const dateChangeHandler = (event) => {
     setEnteredDate(event.target.value);
   };
+
+  //Eventhanders for form submission(submit the form once clicked on btn with type submit inside that form)
   const submitHandler = (event) => {
     event.preventDefault();
     const expenseData = {
@@ -23,11 +25,17 @@ const ExpenseForm = () => {
       amount: enteredAmount,
       date: new Date(enteredDate),
     };
-    setEnteredTitle("hi");
+
+    // calling  the custom event handling fn to pass data from this file(child) to the New expense file (parent)
+    props.onSaveExpenseData(expenseData);
+
+    //clearing the input fields once form submitted.
+    setEnteredTitle("");
     setEnteredAmount('');
     setEnteredDate("");
-    console.log(expenseData);
   };
+
+
   return (
     <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
