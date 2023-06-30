@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import "./Expenses.css";
 
 import ExpenseItem from "./ExpenseItem";
@@ -7,35 +7,27 @@ import "../UI/Card.css";
 import ExpenseFilter from "./ExpenseFilter";
 
 const Expenses = (props) => {
-  const[selectedValue,setSelectedValue]=useState('2020')
-  const filterChangeHandler=selectedYear=>{
-    setSelectedValue(selectedYear)
-  }
+  const [selectedValue, setSelectedValue] = useState("2023");
+  const filterChangeHandler = (selectedYear) => {
+    setSelectedValue(selectedYear);
+  };
   return (
     <div>
       <Card className="expenses">
         {/*selected used for making the default dropdown value to 2020 */}
-      <ExpenseFilter selected={selectedValue} onChangeFilter={filterChangeHandler}></ExpenseFilter>
-        <ExpenseItem
-          title={props.items[0].title}
-          amount={props.items[0].amount}
-          date={props.items[0].date}
-        />
-        <ExpenseItem
-          title={props.items[1].title}
-          amount={props.items[1].amount}
-          date={props.items[1].date}
-        />
-        <ExpenseItem
-          title={props.items[2].title}
-          amount={props.items[2].amount}
-          date={props.items[2].date}
-        />
-        <ExpenseItem
-          title={props.items[3].title}
-          amount={props.items[3].amount}
-          date={props.items[3].date}
-        />
+        <ExpenseFilter
+          selected={selectedValue}
+          onChangeFilter={filterChangeHandler}
+        ></ExpenseFilter>
+        
+        {props.items.map((expense) => (
+          <ExpenseItem
+          key={expense.id}//knows where to put the new list
+            title={expense.title}
+            amount={expense.amount}
+            date={expense.date}
+          />
+        ))}
       </Card>
     </div>
   );

@@ -7,10 +7,6 @@ import "../UI/Card.css";
 const ExpenseItem = (props) => {
   const [title, setTitle] = useState(props.title);
 
-  const eventHandler = () => {
-    setTitle("updated");
-  };
-
   return (
     <Card className="expense-item">
       <ExpenseDate date={props.date} />
@@ -18,7 +14,6 @@ const ExpenseItem = (props) => {
         <h2>{title}</h2>
         <div className="expense-item__price">${props.amount}</div>
       </div>
-      <button onClick={eventHandler}>click Here</button>
     </Card>
   );
 };
