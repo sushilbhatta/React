@@ -5,6 +5,7 @@ import ExpenseItem from "./ExpenseItem";
 import Card from "../UI/Card";
 import "../UI/Card.css";
 import ExpenseFilter from "./ExpenseFilter";
+import ExpenseList from "./ExpenseList";
 
 const Expenses = (props) => {
   const [selectedValue, setSelectedValue] = useState("2022");
@@ -12,8 +13,9 @@ const Expenses = (props) => {
     setSelectedValue(selectedYear);
   };
   const filteredExpenses=props.items.filter((expense)=>{
-    return expense.date.getFullYear().toString()===selectedValue
+    return expense.date.getFullYear().toString()===selectedValue //if the date of the array DUMMY_Data is equal to selected data then returns true
   })
+
   return (
     <div>
       <Card className="expenses">
@@ -22,15 +24,7 @@ const Expenses = (props) => {
           selected={selectedValue}
           onChangeFilter={filterChangeHandler}
         ></ExpenseFilter>
-        
-        {filteredExpenses.map((expense) => (
-          <ExpenseItem
-          key={expense.id}//knows where to put the new list
-            title={expense.title}
-            amount={expense.amount}
-            date={expense.date}
-          />
-        ))}
+      <ExpenseList items={filteredExpenses}></ExpenseList>
       </Card>
     </div>
   );
