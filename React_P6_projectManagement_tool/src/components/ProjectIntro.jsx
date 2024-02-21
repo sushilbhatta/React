@@ -1,19 +1,9 @@
-import { useState } from "react";
+// ProjectIntro.js
 import penImage from "../assets/no-projects.png";
 
-export default function ProjectIntro({
-  introPage,
-  addProjectHandler,
-  isClick,
-}) {
-  console.log(addProjectHandler);
+export default function ProjectIntro({ addProjectHandler, isClick }) {
   return (
-    <div
-      className={
-        (introPage ? "flex-col items-center gap-5" : "hidden") &&
-        (!isClick ? "flex-col items-center gap-5" : "hidden")
-      }
-    >
+    <div className={isClick ? "cancel" : "intro"}>
       <div className='w-1/5 h-1/5'>
         <img
           src={penImage}
