@@ -8,12 +8,17 @@ import logoImg from "./assets/logo.png";
 
 import { sortPlacesByDistance } from "./loc.js";
 
+const storeIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+const storedPlaces = storeIds.map((id) =>
+  AVAILABLE_PLACES.find((place) => place.id === id)
+);
+
 function App() {
   const modal = useRef();
   const selectedPlace = useRef();
   const [availablePlaces, setAvaliablePlaces] = useState([]);
   // picked places
-  const [pickedPlaces, setPickedPlaces] = useState([]);
+  const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
   // get current location of the current user
   // getCurrentPosition may take some time to fetch the current location of the user so we'll use the callback function
   // useEffect
@@ -60,6 +65,7 @@ function App() {
   }
 
   function handleSelectPlace(id) {
+    console.log("id is" + id); // p1,p2,p3
     setPickedPlaces((prevPickedPlaces) => {
       if (prevPickedPlaces.some((place) => place.id === id)) {
         return prevPickedPlaces;
@@ -67,6 +73,19 @@ function App() {
       const place = AVAILABLE_PLACES.find((place) => place.id === id);
       return [place, ...prevPickedPlaces];
     });
+
+    //  the code below is a sideeffect too but we donot need to use the useEffect() hook because
+    // 1.it cannot be used inside the function /
+    // 2. this code execute only when the user has clicked on btn not when app component renders so  this will not cause the infinite loop.
+    const storeIds = JSON.parse(localStorage.getItem("selectedPlaces")) || []; //get the already exiting item on the local storage and if false return empty array
+    //storeIds return Array
+    console.log(storeIds);
+    // id==>  id of the place selected by user
+
+    if (storeIds.indexOf(id) === -1) {
+      //if index of p1=== -1 ie p1 is not in an storeIds array ,store that id in a localstorage
+      localStorage.setItem("selectedPlaces", JSON.stringify([id, ...storeIds])); //store all the image with ids and all the item in the  storeIds array
+    }
   }
 
   function handleRemovePlace() {
@@ -74,6 +93,13 @@ function App() {
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
     modal.current.close();
+    console.log("s", selectedPlace.current);
+    const storeIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+    localStorage.setItem(
+      "selectedPlaces",
+      JSON.stringify(storeIds.filter((id) => id !== selectedPlace.current))
+      // if the id of stored item is same as the  id of the selected item return false.
+    );
   }
 
   return (
