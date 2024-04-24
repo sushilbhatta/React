@@ -14,7 +14,8 @@ const storedPlaces = storeIds.map((id) =>
 );
 
 function App() {
-  const modal = useRef();
+  // const modal = useRef();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedPlace = useRef();
   const [availablePlaces, setAvaliablePlaces] = useState([]);
   // picked places
@@ -56,12 +57,14 @@ function App() {
 
   // now  we need to  use the shortedPlaes in the Places component in the jsx code below. but we donot get the shorted places in the first render of jsx so we need to trigger the event and use state to trigger the second render .
   function handleStartRemovePlace(id) {
-    modal.current.open();
+    // modal.current.open();
+    setIsModalOpen(false);
     selectedPlace.current = id;
   }
 
   function handleStopRemovePlace() {
-    modal.current.close();
+    // modal.current.close();
+    setIsModalOpen(false);
   }
 
   function handleSelectPlace(id) {
@@ -92,7 +95,8 @@ function App() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
-    modal.current.close();
+    // modal.current.close();
+    setIsModalOpen(false);
     console.log("s", selectedPlace.current);
     const storeIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     localStorage.setItem(
@@ -104,7 +108,7 @@ function App() {
 
   return (
     <>
-      <Modal ref={modal}>
+      <Modal open={isModalOpen}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
           onConfirm={handleRemovePlace}
