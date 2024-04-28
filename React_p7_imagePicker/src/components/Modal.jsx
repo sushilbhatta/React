@@ -1,7 +1,7 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 // insted of using forwardRef and useImperativeHandle we can pass  via prop as well.
-const Modal = function Modal({ open, children }) {
+const Modal = function Modal({ open, children, onClose }) {
   console.log(open);
   const dialog = useRef();
 
@@ -32,17 +32,17 @@ const Modal = function Modal({ open, children }) {
   // as we know that the useEffect is executed after the component is executed. and that mean that now the reference of the dialog element is created by the ref={dialog} below and now the DOM api function could be accessed.
   // since the open is correctly synchrouized with the time it is accessable we can say react is used to synchroize the props
   useEffect(() => {
-    if (open === true) {
+    if (open) {
       dialog.current.showModal();
     } else {
       dialog.current.close();
     }
-  }, []);
+  }, [open]);
 
   return createPortal(
-    <dialog className='modal' ref={dialog} open={open}>
+    <dialog className='modal' ref={dialog} onClose={onClose}>
       {/* open attribute is the builtin html attribute for the html dialog element . It should either be true or false */}
-      {children}
+      {open ? children : null}
     </dialog>,
     document.getElementById("modal")
   );

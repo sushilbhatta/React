@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import Places from "./components/Places.jsx";
 import { AVAILABLE_PLACES } from "./data.js";
@@ -15,7 +15,7 @@ const storedPlaces = storeIds.map((id) =>
 
 function App() {
   // const modal = useRef();
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedPlace = useRef();
   const [availablePlaces, setAvaliablePlaces] = useState([]);
   // picked places
@@ -58,10 +58,10 @@ function App() {
   // now  we need to  use the shortedPlaes in the Places component in the jsx code below. but we donot get the shorted places in the first render of jsx so we need to trigger the event and use state to trigger the second render .
   function handleStartRemovePlace(id) {
     // modal.current.open();
-    setIsModalOpen(false);
+    setIsModalOpen(true);
     selectedPlace.current = id;
   }
-
+  // when no is clicked dialog is stopped from closing.
   function handleStopRemovePlace() {
     // modal.current.close();
     setIsModalOpen(false);
@@ -90,25 +90,23 @@ function App() {
       localStorage.setItem("selectedPlaces", JSON.stringify([id, ...storeIds])); //store all the image with ids and all the item in the  storeIds array
     }
   }
-
-  function handleRemovePlace() {
+  const handleRemovePlace = useCallback(function handleRemovePlace() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
     // modal.current.close();
     setIsModalOpen(false);
-    console.log("s", selectedPlace.current);
     const storeIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     localStorage.setItem(
       "selectedPlaces",
       JSON.stringify(storeIds.filter((id) => id !== selectedPlace.current))
       // if the id of stored item is same as the  id of the selected item return false.
     );
-  }
+  }, []);
 
   return (
     <>
-      <Modal open={isModalOpen}>
+      <Modal open={isModalOpen} onClose={handleStopRemovePlace}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
           onConfirm={handleRemovePlace}
