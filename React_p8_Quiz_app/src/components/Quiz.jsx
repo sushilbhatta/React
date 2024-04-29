@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import QUESTIONS from "../questions";
 import quizCompleteImg from "../assets/quiz-complete.png";
-import QuestionTimer from "./QuestionTimer";
+import Question from "./Question";
 
 export default function Quiz() {
   const [userAnswer, setUserAnswer] = useState([]);
-  const activeQuestionIndex = userAnswer.length;
 
+  //   index of the active question clicked
+  //   const activeQuestionIndex =
+  //     answerState === "" ? userAnswer.length : userAnswer.length - 1; //activeQuestionState will remain same even if clicked when the state is set.
+  // when the ans is clicked the state will be mset but the active question inddex will not increase .
+  const activeQuestionIndex = userAnswer.length;
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-  function handleSelectAnswer(selectedAnswer) {
-    setUserAnswer((prevUserAns) => [...prevUserAns, selectedAnswer]);
-  }
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
+    //update the useranswer when clicked
+    setUserAnswer((prevUserAns) => {
+      return [...prevUserAns, selectedAnswer];
+    });
+  },
+  []);
+
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
+
   if (quizIsComplete) {
     return (
       <div id='summary'>
@@ -20,31 +36,15 @@ export default function Quiz() {
       </div>
     );
   }
-  //   suffled answer
-  const suffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-  suffledAnswers.sort(() => Math.random() - 0.5);
 
   return (
     <div id='quiz'>
-      <div id='question'>
-        <QuestionTimer
-          timeout={10000}
-          //   when the timer is expired the handleSelectAnswer function will be executed but no answer will be registerd as the timer is expired.
-          onTimeout={() => handleSelectAnswer(null)}
-        ></QuestionTimer>
-        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <ul id='answers'>
-          {suffledAnswers.map((answer) => {
-            return (
-              <li className='answer' key={answer}>
-                <button onClick={() => handleSelectAnswer(answer)}>
-                  {answer}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Question
+        key={activeQuestionIndex}
+        index={activeQuestionIndex}
+        onSelectAnswer={handleSelectAnswer}
+        onSkipAnswer={handleSkipAnswer}
+      ></Question>
     </div>
   );
 }
