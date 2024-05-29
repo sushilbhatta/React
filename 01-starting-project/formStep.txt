@@ -1,0 +1,21 @@
+1.Form submission
+=>  make button listen to click ie add onClick on button
+==> create a function that will be executed when the button is clicked.
+        ==> dont forget to add e.preventDefault() on form element or if onclick is added to btn change its type to the button and dont add prventDefault on the function handleSubmit 
+function handleInputChange(identifier, e) {
+    setEnteredValue((prevValue) => ({
+      ...prevValue,
+      [identifier]: e.target.value,
+    }));
+  }
+onChange={(e) => handleInputChange("password", e)}
+        ||
+function handleInputChange(identifier, value) {
+    setEnteredValue((prevValue) => ({
+      ...prevValue,
+      [identifier]: value,
+    }));
+  }
+onChange={(e) => handleInputChange("password", e.target.value)}
+        
+ 

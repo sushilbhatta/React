@@ -1,132 +1,13 @@
-import { useRef, useState, useCallback, useEffect } from "react";
-
-import Places from "./components/Places.jsx";
-import Modal from "./components/Modal.jsx";
-import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
-import logoImg from "./assets/logo.png";
-import AvailablePlaces from "./components/AvailablePlaces.jsx";
-import { fetchUserPlaces, updateUserPlaces } from "./http.js";
-import Error from "./components/Error.jsx";
+import Header from "./components/Header.jsx";
+import Login from "./components/Login.jsx";
+import Signup from "./components/Signup.jsx";
 
 function App() {
-  const selectedPlace = useRef();
-
-  const [userPlaces, setUserPlaces] = useState([]);
-  const [errorUpdatingPlaces, SetErrorUpdatingPlaces] = useState();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    async function fetchPlaces() {
-      setIsFetching(true);
-      try {
-        const places = await fetchUserPlaces();
-        setUserPlaces(places);
-        setIsFetching(false);
-      } catch (error) {
-        setError({
-          message:
-            error.message || "could not fetch user places, Please try again!!",
-        });
-        setIsFetching(true);
-      }
-      // setIsFetching(false);
-    }
-    fetchPlaces();
-  }, []);
-
-  function handleStartRemovePlace(place) {
-    setModalIsOpen(true);
-    selectedPlace.current = place;
-  }
-
-  function handleStopRemovePlace() {
-    setModalIsOpen(false);
-  }
-
-  async function handleSelectPlace(selectedPlace) {
-    setUserPlaces((prevPickedPlaces) => {
-      if (!prevPickedPlaces) {
-        prevPickedPlaces = [];
-      }
-      if (prevPickedPlaces.some((place) => place.id === selectedPlace.id)) {
-        //selected place already array ma xa vane direct return garne
-        return prevPickedPlaces;
-      }
-      return [selectedPlace, ...prevPickedPlaces]; //xaina vane   selected palce ra prevplce lai array ma spred garera return garne
-    });
-    try {
-      await updateUserPlaces([selectedPlace, ...userPlaces]); //array of obj
-    } catch (error) {
-      setUserPlaces[userPlaces];
-      SetErrorUpdatingPlaces({
-        message: error.message || "Failed to update Places.",
-      });
-    }
-  }
-
-  const handleRemovePlace = useCallback(async function handleRemovePlace() {
-    setUserPlaces((prevPickedPlaces) =>
-      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
-    );
-    // optimistic update==> first updating the state and then sending the htttp request
-    try {
-      await updateUserPlaces(
-        userPlaces.filter((place) => place.id !== selectedPlace.current.id)
-      );
-    } catch (error) {
-      setUserPlaces(userPlaces);
-      SetErrorUpdatingPlaces({
-        message: error.message || "Failed to delete the place",
-      });
-    }
-
-    setModalIsOpen(false);
-  }, []);
-  function handleError() {
-    SetErrorUpdatingPlaces(null);
-  }
   return (
     <>
-      <Modal open={errorUpdatingPlaces} onClose={handleError}>
-        {errorUpdatingPlaces && (
-          <Error
-            title='An Error occured'
-            message={errorUpdatingPlaces.message}
-            onConfirm={handleError}
-          ></Error>
-        )}
-      </Modal>
-      <Modal open={modalIsOpen} onClose={handleStopRemovePlace}>
-        <DeleteConfirmation
-          onCancel={handleStopRemovePlace}
-          onConfirm={handleRemovePlace}
-        />
-      </Modal>
-
-      <header>
-        <img src={logoImg} alt='Stylized globe' />
-        <h1>PlacePicker</h1>
-        <p>
-          Create your personal collection of places you would like to visit or
-          you have visited.
-        </p>
-      </header>
+      <Header />
       <main>
-        {error && <Error title='An error occured' message={error.message} />}
-        {!error && (
-          <Places
-            title="I'd like to visit ..."
-            fallbackText='Select the places you would like to visit below.'
-            isLoading={isFetching}
-            loadingText='Fetching your Places'
-            places={userPlaces}
-            onSelectPlace={handleStartRemovePlace}
-          />
-        )}
-
-        <AvailablePlaces onSelectPlace={handleSelectPlace} />
+        <Signup></Signup>
       </main>
     </>
   );

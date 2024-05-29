@@ -6,6 +6,7 @@ import { useFetch } from "../hooks/useFetch.js";
 
 async function fetchSortedPlaces() {
   const places = await fetchAvailablePlaces();
+  // returned promise as the  useFetch hook expects to get the promise
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition((position) => {
       const sortedPlaces = sortPlacesByDistance(
