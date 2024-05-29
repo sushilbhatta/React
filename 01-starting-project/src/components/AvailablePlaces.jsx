@@ -1,29 +1,46 @@
 import { useState } from "react";
 import Places from "./Places.jsx";
 import { useEffect } from "react";
-
+import Error from "./Error.jsx";
+import { sortPlacesByDistance } from "../loc.js";
+import { fetchAvaliablePlaces } from "../http.js";
 export default function AvailablePlaces({ onSelectPlace }) {
-  const [isFetching, setIsFetching] = useState(false);
-  const [availablePlaces, setAvaliablePlaces] = useState([]);
+  // the below 3 state are important to have while fetching data from server
+  const [isFetching, setIsFetching] = useState(false); //store the fetching state
+  const [availablePlaces, setAvaliablePlaces] = useState([]); //store the array of all avaliable places
+  const [error, setError] = useState(); //for updating ui with error message
   useEffect(() => {
     async function fetchPlaces() {
       setIsFetching(true);
-      const response = await fetch("http://localhost:3000/places");
-      const resData = await response.json();
-      console.log(resData);
-      setAvaliablePlaces(resData.places);
-      setIsFetching(false);
+      try {
+        const places = await fetchAvaliablePlaces();
+
+        // before setting the places, we need to short the places based on the users current location
+
+        navigator.geolocation.getCurrentPosition((position) => {
+          console.log(position);
+          const sortedPlaces = sortPlacesByDistance(
+            places,
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          setAvaliablePlaces(sortedPlaces);
+          setIsFetching(false);
+        });
+      } catch (error) {
+        console.log(error);
+        setError({
+          message:
+            error.message || "Could not fetch places, please try again later!",
+        });
+        setIsFetching(false);
+      }
     }
     fetchPlaces();
-    // fetch("http://localhost:3000/places")
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((resData) => {
-    //     console.log(resData.places);
-    //     setAvaliablePlaces(resData.places);
-    //   });
   }, []);
+  if (error) {
+    return <Error title='An error occured!' message={error.message}></Error>;
+  }
 
   return (
     <Places
