@@ -19,3 +19,11 @@ function handleInputChange(identifier, value) {
 onChange={(e) => handleInputChange("password", e.target.value)}
         
  
+
+ Good pattern for form validation
+ Type 1  ==> on every keyStrock
+ 1.valadating the input in every keystrock
+ 2/validate on lost focus 
+ 3.resetting the focus when the user types again 
+
+ Type 2===> on form submittion

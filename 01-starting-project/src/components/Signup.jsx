@@ -13,6 +13,7 @@ export default function Signup() {
     // merget the acquition extracted with all other data
     data.acquisition = acquisitionChannel;
     console.log(data);
+    // event.target.reset();   used to reset the form when submitted.
   }
   return (
     <form onSubmit={handleSubmit}>
